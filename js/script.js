@@ -42,10 +42,26 @@ geo_loc.onclick = function(){
     map2.removeLayer(img);
   };
 
-  img = L.imageOverlay("img/img1.jfif", bound).addTo(map2);
+  // img = L.imageOverlay("img/img1.jfif", bound).addTo(map2);
 
   time.disabled = false;
   time.value = 100;
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', 'https://b1bb-34-123-217-130.ngrok-free.app/visual-image/', true)
+  xhr.setRequestHeader('Content-type', 'application/json');
+  // xhr.setRequestHeader('Access-Control-Allow-Origin', '*')
+
+  xhr.onload = function() {
+    // console.log(this.responseText)
+    var image = this.response;
+    img = L.imageOverlay(image, bound).addTo(map2);
+  }
+
+  parms = JSON.stringify({"bbox": [14.344822, 14.366206, 77.581514, 77.601144],"time_of_interest": "2022-04-07/2022-05-07"});
+
+  xhr.send(parms);
+  
 };
 
 // Changing the overlay with slider
@@ -130,4 +146,35 @@ map2.on(L.Draw.Event.CREATED, function (e) {
   console.log(coordinates)
 
   drawn_items.addLayer(layer);
+});
+
+$("#fetchBtn").on("click", function() {
+  console.log("Fetching Data");
+
+  const xhr = new XMLHttpRequest;
+
+  xhr.open("GET", "https://jsonplaceholder.typicode.com/posts", true);
+
+  xhr.onload = function() {
+    console.log(this.responseText)
+  }
+
+  xhr.send();
+});
+
+$("#postBtn").on("click", function() {
+  console.log("Posting Data");
+
+  const xhr = new XMLHttpRequest;
+
+  xhr.open("POST", "https://jsonplaceholder.typicode.com/posts", true);
+  xhr.setRequestHeader('Content-type', 'application/json');
+
+  xhr.onload = function() {
+    console.log(this.responseText)
+  }
+
+  parms = JSON.stringify({"userId": 1, "id": 1, "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit", "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"});
+
+  xhr.send(parms);
 });
